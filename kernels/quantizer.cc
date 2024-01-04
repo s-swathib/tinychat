@@ -1,4 +1,5 @@
 #include <cassert>
+#include <stdint.h>
 
 #ifdef QM_ARM
 #include <arm_neon.h>
