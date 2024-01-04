@@ -58,11 +58,13 @@ int main(int argc, char* argv[]) {
         }
         std::cout << "Data format: " << argv[2] << " selected" << std::endl;
         target_data_format = argv[2];
-    } else {
-        if (isLLaMA7B(target_model)) {
+    } 
+	else {
+		if (isLLaMA7B(target_model)) {
             std::cout << "Using model: " + target_model << std::endl;
             std::cout << "Using LLaMA's default data format: " + target_data_format << std::endl;
-        } else {  // OPT
+        } 
+		else {  // OPT
             target_model = "OPT6.7B";
             target_data_format = "INT8";
             std::cout << "Using model: " + target_model << std::endl;
@@ -76,19 +78,13 @@ int main(int argc, char* argv[]) {
         // Load model
         std::cout << target_model << std::endl;
         std::cout << "Loading model.. " << std::flush;
-
+		
         int model_id = model_config[target_model];
-
         std::string m_path = model_path[target_model];
-
         struct opt_params generation_config;
-
         generation_config.n_predict = 512;
-
         generation_config.n_vocab = 32000;
-
         generation_config.temp = 0.1f;
-
         generation_config.repeat_penalty = 1.25f;
 
 
@@ -105,8 +101,9 @@ int main(int argc, char* argv[]) {
 
                 LLaMAGenerate(&model, LLaMA_FP32, input, generation_config, "models/llama_vocab.bin", true);
             }
-        } else if (format_id == INT4) {
-            m_path = "INT4/" + m_path;
+        } 
+		else if (format_id == INT4) {
+			m_path = "INT4/" + m_path;
 
             try {
                 Int4LlamaForCausalLM model = Int4LlamaForCausalLM("INT4/models/LLaMA_7B_2_chat", get_opt_model_config(LLaMA_7B));
