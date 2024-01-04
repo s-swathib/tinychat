@@ -74,15 +74,23 @@ int main(int argc, char* argv[]) {
         int format_id = data_format_list[target_data_format];
 
         // Load model
-        std::cout << "Loading model... " << std::flush;
+        std::cout << target_model << std::endl;
+        std::cout << "Loading model.. " << std::flush;
+
         int model_id = model_config[target_model];
+
         std::string m_path = model_path[target_model];
 
         struct opt_params generation_config;
+
         generation_config.n_predict = 512;
+
         generation_config.n_vocab = 32000;
+
         generation_config.temp = 0.1f;
+
         generation_config.repeat_penalty = 1.25f;
+
 
         if (format_id == FP32) {
             Fp32LlamaForCausalLM model = Fp32LlamaForCausalLM(m_path, get_opt_model_config(model_id));
@@ -99,24 +107,33 @@ int main(int argc, char* argv[]) {
             }
         } else if (format_id == INT4) {
             m_path = "INT4/" + m_path;
-            Int4LlamaForCausalLM model = Int4LlamaForCausalLM(m_path, get_opt_model_config(model_id));
-            std::cout << "Finished!" << std::endl;
 
-            // Get input from the user
-            while (true) {
-                std::cout << "USER: ";
-                std::string input;
-                std::getline(std::cin, input);
-                input = "A chat between a human and an assistan.\n\n### Human: " + input + "\n### Assistant: \n";
-
-                LLaMAGenerate(&model, LLaMA_INT4, input, generation_config, "models/llama_vocab.bin", true);
-            }
-        } else {
-            std::cout << std::endl;
-            std::cerr << "At this time, we only support FP32 and INT4 for LLaMA7B." << std::endl;
+            try {
+                Int4LlamaForCausalLM model = Int4LlamaForCausalLM("INT4/models/LLaMA_7B_2_chat", get_opt_model_config(LLaMA_7B));
+                std::cout << "Finished!" << std::endl;
+                // Get input from the user
+                while (true) {
+                    std::cout << "USER: ";
+                    std::string input;
+                    std::getline(std::cin, input);
+                    input = "A chat between a human and an assistan.\n\n### Human: " + input + "\n### Assistant: \n";
+                    LLaMAGenerate(&model, LLaMA_INT4, input, generation_config, "models/llama_vocab.bin", true);
+                }
+            }catch (const char*& error) {
+                std::cerr << "Error during model initialization: " << error << std::endl;
+                // You can also handle the error here, for example, by returning from the function or exiting the program
+            } 
         }
-    } else {  // OPT
-        // Load model
+		else {
+			std::cout << std::endl;
+			std::cerr << "At this time, we only support FP32 and INT4 for LLaMA7B." << std::endl;
+        }
+    
+    } 
+	else {
+		//OPT Model
+		std::cout << "Good" << std::endl;
+	    std::cout << "std::flush" << std::endl;
         std::cout << "Loading model... " << std::flush;
         int model_id = model_config[target_model];
         std::string m_path = model_path[target_model];
