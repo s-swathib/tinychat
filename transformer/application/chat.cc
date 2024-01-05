@@ -101,10 +101,9 @@ int main(int argc, char* argv[]) {
 
                 LLaMAGenerate(&model, LLaMA_FP32, input, generation_config, "models/llama_vocab.bin", true);
             }
-		} 
-		else if (format_id == INT4) {
+        } 
+        else if (format_id == INT4) {
 			m_path = "INT4/" + m_path;
-
             try {
                 Int4LlamaForCausalLM model = Int4LlamaForCausalLM("INT4/models/LLaMA_7B_2_chat", get_opt_model_config(LLaMA_7B));
                 std::cout << "Finished!" << std::endl;
