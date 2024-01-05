@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         generation_config.temp = 0.1f;
         generation_config.repeat_penalty = 1.25f;
 
-
+//
         if (format_id == FP32) {
             Fp32LlamaForCausalLM model = Fp32LlamaForCausalLM(m_path, get_opt_model_config(model_id));
             std::cout << "Finished!" << std::endl;
